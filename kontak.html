@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kontak & Booking — JogjaTrip</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --hijau: #2D6A4F;
+      --hijau-muda: #52B788;
+      --kuning: #F4A261;
+      --krem: #FEFAE0;
+      --coklat: #3D2B1F;
+      --abu: #6B7280;
+      --putih: #FFFFFF;
+      --merah: #DC2626;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--krem); color: var(--coklat); }
+
+    /* NAVBAR */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 5%;
+      background: rgba(254,250,224,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(45,106,79,0.15);
+      transition: box-shadow 0.3s;
+    }
+    nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+    .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: var(--hijau); text-decoration: none; }
+    .logo span { color: var(--kuning); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--coklat); font-weight: 500; font-size: 0.95rem; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--hijau); }
+    .nav-cta { background: var(--hijau); color: var(--putih) !important; padding: 0.5rem 1.2rem; border-radius: 50px; }
+    .nav-cta:hover { background: var(--hijau-muda) !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
+    .hamburger span { width: 24px; height: 2px; background: var(--coklat); border-radius: 2px; }
+
+    /* PAGE HEADER */
+    .page-header {
+      padding: 8rem 5% 4rem;
+      background: linear-gradient(135deg, var(--hijau) 0%, var(--hijau-muda) 100%);
+      color: var(--putih);
+      text-align: center;
+    }
+    .page-header .eyebrow {
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: 0.75rem;
+    }
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900; margin-bottom: 1rem;
+    }
+    .page-header p { color: rgba(255,255,255,0.8); font-size: 1.05rem; max-width: 500px; margin: 0 auto; line-height: 1.7; }
+
+    /* MAIN LAYOUT */
+    .kontak-section {
+      padding: 4rem 5%;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* INFO CARD */
+    .info-card { display: flex; flex-direction: column; gap: 1.5rem; }
+    .info-item {
+      background: var(--putih); border-radius: 14px; padding: 1.25rem 1.5rem;
+      display: flex; gap: 1rem; align-items: flex-start;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    }
+    .info-icon { font-size: 1.4rem; }
+    .info-item h4 { font-size: 0.95rem; margin-bottom: 0.25rem; }
+    .info-item p, .info-item a { font-size: 0.87rem; color: var(--abu); text-decoration: none; line-height: 1.6; }
+    .info-item a:hover { color: var(--hijau); }
+
+    .map-wrap {
+      border-radius: 14px; overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      height: 220px;
+    }
+    .map-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+
+    /* FORM */
+    .form-card {
+      background: var(--putih); border-radius: 20px; padding: 2.5rem;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.07);
+    }
+    .form-card h2 {
+      font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 0.4rem;
+    }
+    .form-card > p { color: var(--abu); font-size: 0.9rem; margin-bottom: 1.75rem; }
+
+    .form-row { margin-bottom: 1.25rem; }
+    .form-row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-row label { display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 0.4rem; }
+    .form-row input, .form-row select, .form-row textarea {
+      width: 100%; padding: 0.7rem 1rem; border-radius: 10px;
+      border: 2px solid rgba(45,106,79,0.18); font-family: 'Inter', sans-serif;
+      font-size: 0.92rem; background: var(--krem); outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-row input:focus, .form-row select:focus, .form-row textarea:focus { border-color: var(--hijau); }
+    .form-row textarea { resize: vertical; min-height: 90px; }
+    .form-row input.error, .form-row select.error, .form-row textarea.error { border-color: var(--merah); }
+    .error-msg { color: var(--merah); font-size: 0.78rem; margin-top: 0.3rem; display: none; }
+    .error-msg.show { display: block; }
+
+    .char-count { font-size: 0.75rem; color: var(--abu); text-align: right; margin-top: 0.3rem; }
+
+    .submit-btn {
+      width: 100%; background: var(--hijau); color: var(--putih);
+      border: none; padding: 0.9rem; border-radius: 50px;
+      font-weight: 700; font-size: 1rem; cursor: pointer; transition: background 0.2s;
+    }
+    .submit-btn:hover { background: var(--hijau-muda); }
+
+    .success-msg {
+      display: none; background: rgba(82,183,136,0.12); color: var(--hijau);
+      padding: 1rem 1.25rem; border-radius: 12px; font-size: 0.9rem;
+      margin-bottom: 1.5rem; font-weight: 600; text-align: center;
+    }
+    .success-msg.show { display: block; }
+
+    /* FOOTER */
+    footer {
+      background: var(--coklat); color: rgba(255,255,255,0.6);
+      padding: 2.5rem 5%;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 900; color: var(--putih); text-decoration: none; }
+    .footer-logo span { color: var(--kuning); }
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+    .footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--putih); }
+
+    @media (max-width: 900px) {
+      .kontak-section { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--krem); padding: 1.5rem 5%; border-top: 1px solid rgba(45,106,79,0.1); gap: 1rem; }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+      .form-row-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="index.html" class="logo">Jogja<span>Trip</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="destinasi.html">Destinasi</a></li>
+    <li><a href="galeri.html">Galeri</a></li>
+    <li><a href="panduan.html">Panduan</a></li>
+    <li><a href="kontak.html" class="nav-cta active">Booking</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="eyebrow">Hubungi Kami</div>
+  <h1>Kontak & Booking</h1>
+  <p>Punya pertanyaan atau ingin booking paket wisata? Isi form di bawah, tim kami akan segera merespons.</p>
+</div>
+
+<!-- KONTAK SECTION -->
+<div class="kontak-section">
+
+  <!-- INFO & MAP -->
+  <div class="info-card">
+    <div class="info-item">
+      <span class="info-icon">📍</span>
+      <div>
+        <h4>Alamat Kantor</h4>
+        <p>Jl. Malioboro No. 88, Yogyakarta, DI Yogyakarta 55213</p>
+      </div>
+    </div>
+    <div class="info-item">
+      <span class="info-icon">📞</span>
+      <div>
+        <h4>Telepon</h4>
+        <a href="tel:+622741234567">(0274) 123-4567</a>
+      </div>
+    </div>
+    <div class="info-item">
+      <span class="info-icon">✉️</span>
+      <div>
+        <h4>Email</h4>
+        <a href="mailto:halo@jogjatrip.id">halo@jogjatrip.id</a>
+      </div>
+    </div>
+    <div class="info-item">
+      <span class="info-icon">🕐</span>
+      <div>
+        <h4>Jam Operasional</h4>
+        <p>Senin – Minggu, 08.00 – 20.00 WIB</p>
+      </div>
+    </div>
+    <div class="map-wrap">
+      <iframe
+        src="https://www.google.com/maps?q=Malioboro,Yogyakarta&output=embed"
+        title="Lokasi Kantor JogjaTrip"
+        loading="lazy">
+      </iframe>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-card">
+    <h2>Form Booking</h2>
+    <p>Lengkapi data di bawah untuk mengajukan permintaan paket wisata.</p>
+
+    <div class="success-msg" id="successMsg">✓ Terima kasih! Permintaan booking kamu berhasil terkirim. Tim kami akan menghubungi dalam 1x24 jam.</div>
+
+    <form id="bookingForm" novalidate>
+      <div class="form-row-grid">
+        <div class="form-row">
+          <label for="nama">Nama Lengkap</label>
+          <input type="text" id="nama" name="nama" placeholder="Nama kamu" />
+          <div class="error-msg" id="err-nama">Nama wajib diisi (minimal 3 karakter).</div>
+        </div>
+        <div class="form-row">
+          <label for="telepon">No. Telepon</label>
+          <input type="tel" id="telepon" name="telepon" placeholder="08xxxxxxxxxx" />
+          <div class="error-msg" id="err-telepon">Nomor telepon tidak valid.</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="nama@email.com" />
+        <div class="error-msg" id="err-email">Format email tidak valid.</div>
+      </div>
+
+      <div class="form-row-grid">
+        <div class="form-row">
+          <label for="destinasi">Minat Destinasi</label>
+          <select id="destinasi" name="destinasi">
+            <option value="">Pilih destinasi</option>
+            <option value="budaya">Wisata Budaya (Candi, Keraton)</option>
+            <option value="alam">Wisata Alam (Merapi, Hutan Pinus)</option>
+            <option value="pantai">Wisata Pantai</option>
+            <option value="kuliner">Wisata Kuliner</option>
+            <option value="paket-lengkap">Paket Lengkap</option>
+          </select>
+          <div class="error-msg" id="err-destinasi">Silakan pilih salah satu destinasi.</div>
+        </div>
+        <div class="form-row">
+          <label for="tanggal">Tanggal Kunjungan</label>
+          <input type="date" id="tanggal" name="tanggal" />
+          <div class="error-msg" id="err-tanggal">Silakan pilih tanggal kunjungan.</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="pesan">Pesan Tambahan</label>
+        <textarea id="pesan" name="pesan" maxlength="300" placeholder="Ceritakan kebutuhan liburanmu, jumlah rombongan, dsb."></textarea>
+        <div class="char-count" id="charCount">0 / 300 karakter</div>
+      </div>
+
+      <button type="submit" class="submit-btn">Kirim Permintaan Booking</button>
+    </form>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <a href="index.html" class="footer-logo">Jogja<span>Trip</span></a>
+  <ul class="footer-links">
+    <li><a href="destinasi.html">Destinasi</a></li>
+    <li><a href="galeri.html">Galeri</a></li>
+    <li><a href="panduan.html">Panduan</a></li>
+    <li><a href="kontak.html">Kontak</a></li>
+  </ul>
+  <div style="font-size:0.82rem;">© 2026 JogjaTrip. All rights reserved.</div>
+</footer>
+
+<script>
+  // ===== JS #1: NAVBAR SCROLL & HAMBURGER =====
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+  });
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  // ===== JS #2: HITUNG KARAKTER TEXTAREA =====
+  const pesanEl = document.getElementById('pesan');
+  const charCountEl = document.getElementById('charCount');
+  pesanEl.addEventListener('input', () => {
+    charCountEl.textContent = `${pesanEl.value.length} / 300 karakter`;
+  });
+
+  // ===== JS #3: VALIDASI & SUBMIT FORM =====
+  const form = document.getElementById('bookingForm');
+  const fields = {
+    nama: { el: document.getElementById('nama'), validate: v => v.trim().length >= 3 },
+    telepon: { el: document.getElementById('telepon'), validate: v => /^0\d{9,13}$/.test(v.trim()) },
+    email: { el: document.getElementById('email'), validate: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) },
+    destinasi: { el: document.getElementById('destinasi'), validate: v => v !== '' },
+    tanggal: { el: document.getElementById('tanggal'), validate: v => v !== '' }
+  };
+
+  function validateField(key) {
+    const { el, validate } = fields[key];
+    const isValid = validate(el.value);
+    el.classList.toggle('error', !isValid);
+    document.getElementById('err-' + key).classList.toggle('show', !isValid);
+    return isValid;
+  }
+
+  Object.keys(fields).forEach(key => {
+    fields[key].el.addEventListener('blur', () => validateField(key));
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let allValid = true;
+    Object.keys(fields).forEach(key => {
+      if (!validateField(key)) allValid = false;
+    });
+
+    if (allValid) {
+      document.getElementById('successMsg').classList.add('show');
+      form.reset();
+      charCountEl.textContent = '0 / 300 karakter';
+      Object.keys(fields).forEach(key => {
+        fields[key].el.classList.remove('error');
+        document.getElementById('err-' + key).classList.remove('show');
+      });
+      setTimeout(() => {
+        document.getElementById('successMsg').classList.remove('show');
+      }, 6000);
+    } else {
+      document.getElementById('successMsg').classList.remove('show');
+    }
+  });
+</script>
+
+</body>
+</html>

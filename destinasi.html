@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Destinasi Wisata — JogjaTrip</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --hijau: #2D6A4F;
+      --hijau-muda: #52B788;
+      --kuning: #F4A261;
+      --krem: #FEFAE0;
+      --coklat: #3D2B1F;
+      --abu: #6B7280;
+      --putih: #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--krem); color: var(--coklat); }
+
+    /* NAVBAR */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 5%;
+      background: rgba(254,250,224,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(45,106,79,0.15);
+      transition: box-shadow 0.3s;
+    }
+    nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+    .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: var(--hijau); text-decoration: none; }
+    .logo span { color: var(--kuning); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--coklat); font-weight: 500; font-size: 0.95rem; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--hijau); }
+    .nav-cta { background: var(--hijau); color: var(--putih) !important; padding: 0.5rem 1.2rem; border-radius: 50px; }
+    .nav-cta:hover { background: var(--hijau-muda) !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
+    .hamburger span { width: 24px; height: 2px; background: var(--coklat); border-radius: 2px; }
+
+    /* PAGE HEADER */
+    .page-header {
+      padding: 8rem 5% 4rem;
+      background: linear-gradient(135deg, var(--hijau) 0%, var(--hijau-muda) 100%);
+      color: var(--putih);
+      text-align: center;
+    }
+    .page-header .eyebrow {
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: 0.75rem;
+    }
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900; margin-bottom: 1rem;
+    }
+    .page-header p { color: rgba(255,255,255,0.8); font-size: 1.05rem; max-width: 500px; margin: 0 auto; line-height: 1.7; }
+
+    /* SEARCH & FILTER */
+    .filter-section {
+      background: var(--putih);
+      padding: 2rem 5%;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      position: sticky;
+      top: 64px;
+      z-index: 50;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      max-width: 500px;
+    }
+    .search-bar input {
+      flex: 1;
+      padding: 0.7rem 1.2rem;
+      border: 2px solid rgba(45,106,79,0.2);
+      border-radius: 50px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+      background: var(--krem);
+    }
+    .search-bar input:focus { border-color: var(--hijau); }
+    .search-bar button {
+      background: var(--hijau);
+      color: var(--putih);
+      border: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .search-bar button:hover { background: var(--hijau-muda); }
+
+    .filter-btns {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .filter-label { font-size: 0.85rem; font-weight: 600; color: var(--abu); margin-right: 0.25rem; }
+
+    .filter-btn {
+      padding: 0.45rem 1.1rem;
+      border-radius: 50px;
+      border: 2px solid rgba(45,106,79,0.2);
+      background: transparent;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--coklat);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover { border-color: var(--hijau); color: var(--hijau); }
+    .filter-btn.active {
+      background: var(--hijau);
+      border-color: var(--hijau);
+      color: var(--putih);
+    }
+
+    /* RESULT INFO */
+    .result-info {
+      padding: 1.5rem 5% 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .result-info span { font-size: 0.9rem; color: var(--abu); }
+    .sort-select {
+      padding: 0.4rem 0.8rem;
+      border: 2px solid rgba(45,106,79,0.2);
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      background: var(--putih);
+      color: var(--coklat);
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* DESTINASI GRID */
+    .destinasi-section { padding: 2rem 5% 5rem; }
+
+    .dest-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .dest-card {
+      background: var(--putih);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+    .dest-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,0.12); }
+    .dest-card.hidden { display: none; }
+
+    .dest-img-wrap { position: relative; overflow: hidden; }
+    .dest-img {
+      width: 100%; height: 200px; object-fit: cover;
+      transition: transform 0.4s;
+      display: block;
+    }
+    .dest-card:hover .dest-img { transform: scale(1.05); }
+
+    .dest-badge {
+      position: absolute; top: 12px; left: 12px;
+      padding: 0.25rem 0.7rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--putih);
+    }
+    .badge-alam { background: #16a34a; }
+    .badge-budaya { background: #7c3aed; }
+    .badge-kuliner { background: #ea580c; }
+    .badge-belanja { background: #0891b2; }
+    .badge-sejarah { background: #b45309; }
+    .badge-pantai { background: #0284c7; }
+
+    .dest-fav {
+      position: absolute; top: 12px; right: 12px;
+      background: rgba(255,255,255,0.9);
+      border: none; border-radius: 50%;
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1rem;
+      transition: transform 0.2s;
+    }
+    .dest-fav:hover { transform: scale(1.2); }
+    .dest-fav.liked { color: #ef4444; }
+
+    .dest-body { padding: 1.25rem; flex: 1; display: flex; flex-direction: column; }
+    .dest-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .dest-loc { font-size: 0.8rem; color: var(--abu); margin-bottom: 0.6rem; }
+    .dest-loc::before { content: "📍 "; }
+    .dest-desc { font-size: 0.87rem; color: var(--abu); line-height: 1.6; margin-bottom: 1rem; flex: 1; }
+
+    .dest-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+    .dest-price { font-weight: 700; color: var(--hijau); font-size: 0.95rem; }
+    .dest-rating { font-size: 0.85rem; color: var(--coklat); }
+    .dest-rating .star { color: var(--kuning); }
+
+    /* TABEL PERBANDINGAN */
+    .tabel-section {
+      padding: 0 5% 5rem;
+    }
+    .tabel-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .tabel-sub { color: var(--abu); font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+    .tabel-wrap { overflow-x: auto; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--putih);
+      font-size: 0.9rem;
+    }
+    thead { background: var(--hijau); color: var(--putih); }
+    thead th { padding: 1rem 1.2rem; text-align: left; font-weight: 600; }
+    tbody tr { border-bottom: 1px solid rgba(0,0,0,0.06); transition: background 0.2s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(82,183,136,0.06); }
+    tbody td { padding: 0.9rem 1.2rem; }
+    .td-name { font-weight: 600; }
+    .td-kategori {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 50px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .td-rating { color: var(--kuning); font-weight: 600; }
+    .td-open { color: #16a34a; font-size: 0.85rem; }
+
+    /* NO RESULT */
+    .no-result {
+      text-align: center;
+      padding: 4rem 1rem;
+      display: none;
+      grid-column: 1 / -1;
+    }
+    .no-result.show { display: block; }
+    .no-result .emoji { font-size: 3rem; margin-bottom: 1rem; }
+    .no-result h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 0.5rem; }
+    .no-result p { color: var(--abu); font-size: 0.9rem; }
+
+    /* FOOTER */
+    footer {
+      background: var(--coklat); color: rgba(255,255,255,0.6);
+      padding: 2.5rem 5%;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 900; color: var(--putih); text-decoration: none; }
+    .footer-logo span { color: var(--kuning); }
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+    .footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--putih); }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--krem); padding: 1.5rem 5%; border-top: 1px solid rgba(45,106,79,0.1); gap: 1rem; }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+      .filter-section { position: static; }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="index.html" class="logo">Jogja<span>Trip</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="destinasi.html" class="active">Destinasi</a></li>
+    <li><a href="galeri.html">Galeri</a></li>
+    <li><a href="panduan.html">Panduan</a></li>
+    <li><a href="kontak.html" class="nav-cta">Booking</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="eyebrow">Jelajahi Yogyakarta</div>
+  <h1>Destinasi Wisata</h1>
+  <p>Temukan ratusan destinasi wisata terbaik di Yogyakarta, dari alam hingga budaya dan kuliner.</p>
+</div>
+
+<!-- FILTER SECTION -->
+<div class="filter-section">
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Cari destinasi wisata..." />
+    <button onclick="doSearch()">Cari</button>
+  </div>
+  <div class="filter-btns">
+    <span class="filter-label">Filter:</span>
+    <button class="filter-btn active" data-filter="semua">🌟 Semua</button>
+    <button class="filter-btn" data-filter="alam">🌿 Alam</button>
+    <button class="filter-btn" data-filter="budaya">🎭 Budaya</button>
+    <button class="filter-btn" data-filter="kuliner">🍜 Kuliner</button>
+    <button class="filter-btn" data-filter="belanja">🛍️ Belanja</button>
+    <button class="filter-btn" data-filter="sejarah">🏛️ Sejarah</button>
+    <button class="filter-btn" data-filter="pantai">🏖️ Pantai</button>
+  </div>
+</div>
+
+<!-- RESULT INFO -->
+<div class="result-info">
+  <span id="resultCount">Menampilkan 12 destinasi</span>
+  <select class="sort-select" id="sortSelect" onchange="sortCards()">
+    <option value="default">Urut: Default</option>
+    <option value="rating">Urut: Rating Tertinggi</option>
+    <option value="harga-asc">Urut: Harga Terendah</option>
+    <option value="harga-desc">Urut: Harga Tertinggi</option>
+  </select>
+</div>
+
+<!-- DESTINASI GRID -->
+<div class="destinasi-section">
+  <div class="dest-grid" id="destGrid">
+
+    <!-- Card 1 -->
+    <div class="dest-card" data-kategori="budaya" data-rating="4.9" data-harga="50000">
+      <div class="dest-img-wrap">
+        <img class="dest-img" src="Hehasky.webp" alt="heha sky" />
+        <span class="dest-badge badge-budaya">Budaya</span>
+        <button class="dest-fav" onclick="toggleFav(this)">🤍</button>
+      </div>
+      <div class="dest-body">
+        <div class="dest-name">Heha sky</div>
+        <div class="dest-loc">Yogyakarta  </div>
+        <p class="dest-desc">Destinasi wisata panorama senja di selatan jogja yang tepatnya berada di gunungkidul</p>
+        <div class="dest-footer">
+          <span class="dest-price">Rp 70.000</span>
+          <span class="dest-rating"><span class="star">★</span> 4.9</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="dest-card" data-kategori="sejarah" data-rating="4.8" data-harga="15000">
+      <div class="dest-img-wrap">
+        <img class="dest-img" src="kraton.jpeg" alt="Keraton Yogyakarta" />
+        <span class="dest-badge badge-sejarah">Sejarah</span>
+        <button class="dest-fav" onclick="toggleFav(this)">🤍</button>
+      </div>
+      <div class="dest-body">
+        <div class="dest-name">Keraton Yogyakarta</div>
+        <div class="dest-loc">Kraton, Yogyakarta</div>
+        <p class="dest-desc">Pusat kebudayaan Jawa yang masih aktif, tempat Sultan dan keluarga kerajaan bermukim hingga kini.</p>
+        <div class="dest-footer">
+          <span class="dest-price">Rp 15.000</span>
+          <span class="dest-rating"><span class="star">★</span> 4.8</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="dest-card" data-kategori="alam" data-rating="4.7" data-harga="25000">
+      <div class="dest-img-wrap">
+        <img class="dest-img" src="merapi.jpg" alt="Gunung Merapi" />
+        <span class="dest-badge badge-alam">Alam</span>
+        <button class="dest-fav" onclick="toggleFav(this)">🤍</button>
+      </div>
+      <div class="dest-body">
+        <div class="dest-name">Gunung Merapi</div>
+        <div class="dest-loc">Sleman, Yogyakarta</div>
+        <p class="dest-desc">Gunung berapi aktif paling terkenal di Indonesia dengan panorama sunrise yang memukau wisatawan.</p>
+        <div class="dest-footer">
+          <span class="dest-price">Rp 25.000</span>
+          <span class="dest-rating"><span class="star">★</span> 4.7</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="dest-card" data-kategori="budaya" data-rating="4.8" data-harga="40000">
+      <div class="dest-img-wrap">
+        <img class="dest-img" src="candiprambanan.jpg" alt="Candi Prambanan" />
+        <span class="dest-badge badge-budaya">Budaya</span>
+        <button class="dest-fav" onclick="toggleFav(this)">🤍</button>
+      </div>
+      <div class="dest-body">
+        <div class="dest-name">Candi Prambanan</div>
+        <div class="dest-loc">Sleman, Yogyakarta</div>
+        <p class="dest-desc">Kompleks candi Hindu terbesar di Indonesia, berdiri megah dengan arsitektur yang luar biasa indah.</p>
+        <div class="dest-footer">
+          <span class="dest-price">Rp 40.000</span>
+          <span class="dest-rating"><span class="star">★</span> 4.8</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="dest-card" data-kategori="pantai" data-rating="4.6" data-harga="10000">
+      <div class="dest-img-wrap">
+        <img class="dest-img" src="pantai.jpg" alt="Pantai Parangtritis" />
+        <span class="dest-badge badge-pantai">Pantai</span>
+        <button class="dest-fav" onclick="toggleFav(this)">🤍</button>
+      </div>
+      <div class="dest-body">
+        <div class="dest-name">Pantai Parangtritis</div>
+        <div class="dest-loc">Bantul, Yogyakarta</div>
+        <p class="dest-desc">Pantai ikonik Yogyakarta dengan ombak besar, pasir hitam, dan pemandangan matahari terbenam yang memukau.</p>
+        <div class="dest-footer">
+          <span class="dest-price">Rp 10.000</span>
+          <span class="dest-rating"><span class="star">★</span> 4.6</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="dest-card" data-kategori="kuliner" data-rating="4.9" data-harga="0">
+      <div class="dest-img-wrap">
+        <img class="dest-img" src="kuliner.jpg" alt="Malioboro" />
+        <span class="dest-badge badge-kuliner">Kuliner</span>
+        <button class="dest-fav" onclick="toggleFav(this)">🤍</button>
+      </div>
+      <div class="dest-body">
+        <div class="dest-name">Malioboro Street Food</div>
+        <div class="dest-loc">Malioboro, Yogyakarta</div>
+        <p class="dest-desc">Surga kuliner jalanan Jogja dengan gudeg, angkringan, dan berbagai jajanan khas yang menggugah selera.</p>
+        <div class="dest-footer">
+          <span class="dest-price">Gratis</span>
+          <span class="dest-rating"><span class="star">★</span> 4.9</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 7 -->
+    <div class="dest-card" data-kategori="belanja" data-rating="4.5" data-harga="0">
+      <div class="dest-img-wrap">
+        <img class="dest-img" src="pasar.jpg" alt="Pasar Beringharjo" />
+        <span class="dest-badge badge-belanja">Belanja</span>
+        <button class="dest-fav" onclick="toggleFav(this)">🤍</button>
+      </div>
+      <div class="dest-body">
+        <div class="dest-name">Pasar Beringharjo</div>
+        <div class="dest-loc">Malioboro, Yogyakarta</div>
+        <p class="dest-desc">Pasar tradisional tertua di Yogyakarta, surga batik, kerajinan, dan oleh-oleh khas Jogja dengan harga terjangkau.</p>
+        <div class="dest-footer">
+          <span class="dest-price">Gratis</span>
+          <span class="dest-rating"><span class="star">★</span> 4.5</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 8 -->
+    <div class="dest-card" data-kategori="alam" data-rating="4.7" data-harga="15000">
+      <div class="dest-img-wrap">
+        <img class="dest-img" src="hutanpinus.jpg" alt="Hutan Pinus Mangunan" />
+        <span class="dest-badge badge-alam">Alam</span>
+        <button class="dest-fav" onclick="toggleFav(this)">🤍</button>
+      </div>
+      <div class="dest-body">
+        <div class="dest-name">Hutan Pinus Mangunan</div>
+        <div class="dest-loc">Bantul, Yogyakarta</div>
+        <p class="dest-desc">Hutan pinus yang sejuk dan rindang, spot foto estetik favorit anak muda Yogyakarta dan sekitarnya.</p>
+        <div class="dest-footer">
+          <span class="dest-price">Rp 15.000</span>
+          <span class="dest-rating"><span class="star">★</span> 4.7</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 9 -->
+    <div class="dest-card" data-kategori="sejarah" data-rating="4.6" data-harga="5000">
+      <div class="dest-img-wrap">
+        <img class="dest-img" src="tamansari.jpg" alt="Taman Sari" />
+        <span class="dest-badge badge-sejarah">Sejarah</span>
+        <button class="dest-fav" onclick="toggleFav(this)">🤍</button>
+      </div>
+      <div class="dest-body">
+        <div class="dest-name">Taman Sari</div>
+        <div class="dest-loc">Kraton, Yogyakarta</div>
+        <p class="dest-desc">Bekas taman kerajaan Keraton Yogyakarta dengan arsitektur indah, kolam pemandian, dan lorong bawah tanah.</p>
+        <div class="dest-footer">
+          <span class="dest-price">Rp 5.000</span>
+          <span class="dest-rating"><span class="star">★</span> 4.6</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 10 -->
+    <div class="dest-card" data-kategori="pantai" data-rating="4.5" data-harga="10000">
+      <div class="dest-img-wrap">
+        <img class="dest-img" src="indrayanti.jpg" alt="Pantai Indrayanti" />
+        <span class="dest-badge badge-pantai">Pantai</span>
+        <button class="dest-fav" onclick="toggleFav(this)">🤍</button>
+      </div>
+      <div class="dest-body">
+        <div class="dest-name">Pantai Indrayanti</div>
+        <div class="dest-loc">Gunungkidul, Yogyakarta</div>
+        <p class="dest-desc">Pantai pasir putih bersih dengan air jernih kebiruan, dikelilingi tebing karang yang cantik dan menawan.</p>
+        <div class="dest-footer">
+          <span class="dest-price">Rp 10.000</span>
+          <span class="dest-rating"><span class="star">★</span> 4.5</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 11 -->
+    <div class="dest-card" data-kategori="kuliner" data-rating="4.8" data-harga="0">
+      <div class="dest-img-wrap">
+        <img class="dest-img" src=
+        "gudeg.jpg" alt="Gudeg Yu Djum" />
+        <span class="dest-badge badge-kuliner">Kuliner</span>
+        <button class="dest-fav" onclick="toggleFav(this)">🤍</button>
+      </div>
+      <div class="dest-body">
+        <div class="dest-name">Gudeg Yu Djum</div>
+        <div class="dest-loc">Wijilan, Yogyakarta</div>
+        <p class="dest-desc">Gudeg legendaris Yogyakarta yang sudah berdiri sejak 1950, wajib dicoba bagi pecinta kuliner nusantara.</p>
+        <div class="dest-footer">
+          <span class="dest-price">Rp 25.000</span>
+          <span class="dest-rating"><span class="star">★</span> 4.8</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 12 -->
+    <div class="dest-card" data-kategori="belanja" data-rating="4.6" data-harga="0">
+      <div class="dest-img-wrap">
+        <img class="dest-img" src="batik.jpg" alt="Batik Malioboro" />
+        <span class="dest-badge badge-belanja">Belanja</span>
+        <button class="dest-fav" onclick="toggleFav(this)">🤍</button>
+      </div>
+      <div class="dest-body">
+        <div class="dest-name">Sentra Batik Malioboro</div>
+        <div class="dest-loc">Malioboro, Yogyakarta</div>
+        <p class="dest-desc">Pusat oleh-oleh batik terlengkap di Yogyakarta dengan ratusan pilihan motif batik khas Jogja berkualitas.</p>
+        <div class="dest-footer">
+          <span class="dest-price">Gratis</span>
+          <span class="dest-rating"><span class="star">★</span> 4.6</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Result Message -->
+    <div class="no-result" id="noResult">
+      <div class="emoji">🔍</div>
+      <h3>Destinasi tidak ditemukan</h3>
+      <p>Coba kata kunci atau filter yang berbeda.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- TABEL PERBANDINGAN -->
+<div class="tabel-section">
+  <h2 class="tabel-title">Perbandingan Destinasi Populer</h2>
+  <p class="tabel-sub">Bandingkan destinasi berdasarkan harga tiket, jam buka, dan fasilitas yang tersedia.</p>
+  <div class="tabel-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Destinasi</th>
+          <th>Kategori</th>
+          <th>Harga Tiket</th>
+          <th>Jam Buka</th>
+          <th>Rating</th>
+          <th>Fasilitas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-name">Heha Sky Ocean View</td>
+          <td><span class="td-kategori" style="background:rgba(124,58,237,0.1);color:#7c3aed;">Budaya</span></td>
+          <td>Rp 70.000</td>
+          <td class="td-open">08.00 – 23.00</td>
+          <td class="td-rating">★ 4.9</td>
+          <td>Parkir, Pertunjukan, Toko Souvenir</td>
+        </tr>
+        <tr>
+          <td class="td-name">Candi Prambanan</td>
+          <td><span class="td-kategori" style="background:rgba(124,58,237,0.1);color:#7c3aed;">Budaya</span></td>
+          <td>Rp 40.000</td>
+          <td class="td-open">06.00 – 17.00</td>
+          <td class="td-rating">★ 4.8</td>
+          <td>Parkir, Toilet, Toko Souvenir</td>
+        </tr>
+        <tr>
+          <td class="td-name">Keraton Yogyakarta</td>
+          <td><span class="td-kategori" style="background:rgba(180,83,9,0.1);color:#b45309;">Sejarah</span></td>
+          <td>Rp 15.000</td>
+          <td class="td-open">08.00 – 14.00</td>
+          <td class="td-rating">★ 4.8</td>
+          <td>Pemandu, Museum, Pertunjukan</td>
+        </tr>
+        <tr>
+          <td class="td-name">Pantai Parangtritis</td>
+          <td><span class="td-kategori" style="background:rgba(2,132,199,0.1);color:#0284c7;">Pantai</span></td>
+          <td>Rp 10.000</td>
+          <td class="td-open">24 Jam</td>
+          <td class="td-rating">★ 4.6</td>
+          <td>Parkir, Warung Makan, ATV</td>
+        </tr>
+        <tr>
+          <td class="td-name">Gunung Merapi</td>
+          <td><span class="td-kategori" style="background:rgba(22,163,74,0.1);color:#16a34a;">Alam</span></td>
+          <td>Rp 25.000</td>
+          <td class="td-open">24 Jam</td>
+          <td class="td-rating">★ 4.7</td>
+          <td>Parkir, Jeep Tour, Museum</td>
+        </tr>
+        <tr>
+          <td class="td-name">Malioboro</td>
+          <td><span class="td-kategori" style="background:rgba(234,88,12,0.1);color:#ea580c;">Kuliner</span></td>
+          <td>Gratis</td>
+          <td class="td-open">24 Jam</td>
+          <td class="td-rating">★ 4.9</td>
+          <td>Restoran, Toko, Angkringan</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <a href="index.html" class="footer-logo">Jogja<span>Trip</span></a>
+  <ul class="footer-links">
+    <li><a href="destinasi.html">Destinasi</a></li>
+    <li><a href="galeri.html">Galeri</a></li>
+    <li><a href="panduan.html">Panduan</a></li>
+    <li><a href="kontak.html">Kontak</a></li>
+  </ul>
+  <div style="font-size:0.82rem;">© 2026 JogjaTrip. All rights reserved.</div>
+</footer>
+
+<script>
+  // ===== NAVBAR SCROLL =====
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // ===== HAMBURGER =====
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  // ===== JS UTAMA: FILTER KATEGORI =====
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  let activeFilter = 'semua';
+  let searchQuery = '';
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      applyFilter();
+    });
+  });
+
+  function doSearch() {
+    searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+    applyFilter();
+  }
+
+  // Cari saat tekan Enter
+  document.getElementById('searchInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') doSearch();
+  });
+
+  function applyFilter() {
+    const cards = document.querySelectorAll('.dest-card');
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+      const kategori = card.dataset.kategori;
+      const nama = card.querySelector('.dest-name').textContent.toLowerCase();
+      const desc = card.querySelector('.dest-desc').textContent.toLowerCase();
+
+      const matchFilter = activeFilter === 'semua' || kategori === activeFilter;
+      const matchSearch = searchQuery === '' || nama.includes(searchQuery) || desc.includes(searchQuery);
+
+      if (matchFilter && matchSearch) {
+        card.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    // Update result count
+    document.getElementById('resultCount').textContent =
+      `Menampilkan ${visibleCount} destinasi`;
+
+    // Tampilkan pesan kosong jika tidak ada hasil
+    const noResult = document.getElementById('noResult');
+    noResult.classList.toggle('show', visibleCount === 0);
+  }
+
+  // ===== SORT KARTU =====
+  function sortCards() {
+    const sortVal = document.getElementById('sortSelect').value;
+    const grid = document.getElementById('destGrid');
+    const cards = Array.from(document.querySelectorAll('.dest-card'));
+
+    cards.sort((a, b) => {
+      if (sortVal === 'rating') {
+        return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+      } else if (sortVal === 'harga-asc') {
+        return parseInt(a.dataset.harga) - parseInt(b.dataset.harga);
+      } else if (sortVal === 'harga-desc') {
+        return parseInt(b.dataset.harga) - parseInt(a.dataset.harga);
+      }
+      return 0;
+    });
+
+    cards.forEach(card => grid.appendChild(card));
+    // Pastikan no-result tetap di akhir
+    grid.appendChild(document.getElementById('noResult'));
+  }
+
+  // ===== FAVORIT / LIKE =====
+  function toggleFav(btn) {
+    btn.classList.toggle('liked');
+    btn.textContent = btn.classList.contains('liked') ? '❤️' : '🤍';
+  }
+</script>
+
+</body>
+</html>

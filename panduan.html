@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panduan Perjalanan — JogjaTrip</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --hijau: #2D6A4F;
+      --hijau-muda: #52B788;
+      --kuning: #F4A261;
+      --krem: #FEFAE0;
+      --coklat: #3D2B1F;
+      --abu: #6B7280;
+      --putih: #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--krem); color: var(--coklat); }
+
+    /* NAVBAR */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 5%;
+      background: rgba(254,250,224,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(45,106,79,0.15);
+      transition: box-shadow 0.3s;
+    }
+    nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+    .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: var(--hijau); text-decoration: none; }
+    .logo span { color: var(--kuning); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--coklat); font-weight: 500; font-size: 0.95rem; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--hijau); }
+    .nav-cta { background: var(--hijau); color: var(--putih) !important; padding: 0.5rem 1.2rem; border-radius: 50px; }
+    .nav-cta:hover { background: var(--hijau-muda) !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
+    .hamburger span { width: 24px; height: 2px; background: var(--coklat); border-radius: 2px; }
+
+    /* PAGE HEADER */
+    .page-header {
+      padding: 8rem 5% 4rem;
+      background: linear-gradient(135deg, var(--hijau) 0%, var(--hijau-muda) 100%);
+      color: var(--putih);
+      text-align: center;
+    }
+    .page-header .eyebrow {
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: 0.75rem;
+    }
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900; margin-bottom: 1rem;
+    }
+    .page-header p { color: rgba(255,255,255,0.8); font-size: 1.05rem; max-width: 500px; margin: 0 auto; line-height: 1.7; }
+
+    section { padding: 4rem 5%; }
+    .section-eyebrow {
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--hijau-muda); margin-bottom: 0.75rem;
+      text-align: center;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700; color: var(--coklat);
+      text-align: center; margin-bottom: 0.75rem;
+    }
+    .section-sub { color: var(--abu); font-size: 0.98rem; line-height: 1.7; text-align: center; max-width: 560px; margin: 0 auto 2.5rem; }
+
+    /* ITINERARY TABS */
+    .itin-tabs { display: flex; justify-content: center; gap: 0.6rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
+    .itin-tab-btn {
+      padding: 0.6rem 1.5rem; border-radius: 50px;
+      border: 2px solid rgba(45,106,79,0.2); background: var(--putih);
+      font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.9rem;
+      color: var(--coklat); cursor: pointer; transition: all 0.2s;
+    }
+    .itin-tab-btn:hover { border-color: var(--hijau); }
+    .itin-tab-btn.active { background: var(--hijau); border-color: var(--hijau); color: var(--putih); }
+
+    .itin-panel { display: none; max-width: 720px; margin: 0 auto; }
+    .itin-panel.active { display: block; }
+    .itin-day {
+      background: var(--putih); border-radius: 16px; padding: 1.5rem;
+      margin-bottom: 1.25rem; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border-left: 4px solid var(--hijau-muda);
+    }
+    .itin-day h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; margin-bottom: 0.75rem; color: var(--hijau); }
+    .itin-day ul { list-style: none; }
+    .itin-day li {
+      display: flex; gap: 0.75rem; padding: 0.4rem 0;
+      font-size: 0.92rem; color: var(--coklat);
+    }
+    .itin-time { font-weight: 700; color: var(--kuning); min-width: 60px; }
+
+    /* BUDGET CALCULATOR */
+    .kalkulator {
+      background: var(--putih); border-radius: 20px; padding: 2.5rem;
+      max-width: 640px; margin: 0 auto; box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+    .kalk-row { margin-bottom: 1.4rem; }
+    .kalk-row label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .kalk-row select, .kalk-row input {
+      width: 100%; padding: 0.7rem 1rem; border-radius: 10px;
+      border: 2px solid rgba(45,106,79,0.2); font-family: 'Inter', sans-serif;
+      font-size: 0.95rem; background: var(--krem); outline: none;
+    }
+    .kalk-row select:focus, .kalk-row input:focus { border-color: var(--hijau); }
+    .kalk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .kalk-btn {
+      width: 100%; background: var(--hijau); color: var(--putih);
+      border: none; padding: 0.85rem; border-radius: 50px;
+      font-weight: 700; font-size: 1rem; cursor: pointer; transition: background 0.2s;
+      margin-top: 0.5rem;
+    }
+    .kalk-btn:hover { background: var(--hijau-muda); }
+    .kalk-hasil {
+      margin-top: 1.5rem; padding: 1.25rem; border-radius: 12px;
+      background: rgba(82,183,136,0.1); text-align: center; display: none;
+    }
+    .kalk-hasil.show { display: block; }
+    .kalk-hasil .angka {
+      font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; color: var(--hijau);
+    }
+    .kalk-hasil p { font-size: 0.85rem; color: var(--abu); margin-top: 0.3rem; }
+
+    /* TABEL PACKING LIST */
+    .table-wrap { max-width: 720px; margin: 0 auto; overflow-x: auto; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+    table { width: 100%; border-collapse: collapse; background: var(--putih); font-size: 0.9rem; }
+    thead { background: var(--hijau); color: var(--putih); }
+    thead th { padding: 0.9rem 1.1rem; text-align: left; font-weight: 600; }
+    tbody tr { border-bottom: 1px solid rgba(0,0,0,0.06); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody td { padding: 0.8rem 1.1rem; }
+
+    /* FAQ ACCORDION */
+    .faq-wrap { max-width: 720px; margin: 0 auto; }
+    .faq-item { background: var(--putih); border-radius: 12px; margin-bottom: 0.8rem; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .faq-question {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.1rem 1.4rem; cursor: pointer; font-weight: 600; font-size: 0.95rem;
+    }
+    .faq-question .icon { transition: transform 0.3s; color: var(--hijau); font-size: 1.2rem; }
+    .faq-item.open .faq-question .icon { transform: rotate(45deg); }
+    .faq-answer {
+      max-height: 0; overflow: hidden; transition: max-height 0.3s ease;
+      padding: 0 1.4rem;
+    }
+    .faq-item.open .faq-answer { max-height: 200px; padding-bottom: 1.1rem; }
+    .faq-answer p { color: var(--abu); font-size: 0.9rem; line-height: 1.7; }
+
+    /* GAMBAR PENDUKUNG */
+    .panduan-img { width: 100%; max-width: 720px; display: block; margin: 0 auto 2.5rem; border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+
+    /* FOOTER */
+    footer {
+      background: var(--coklat); color: rgba(255,255,255,0.6);
+      padding: 2.5rem 5%;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 900; color: var(--putih); text-decoration: none; }
+    .footer-logo span { color: var(--kuning); }
+    .footer-links { display: flex; gap: 1.5rem; list-style: none; }
+    .footer-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--putih); }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--krem); padding: 1.5rem 5%; border-top: 1px solid rgba(45,106,79,0.1); gap: 1rem; }
+      .nav-links.open { display: flex; }
+      .hamburger { display: flex; }
+      .kalk-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="index.html" class="logo">Jogja<span>Trip</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="destinasi.html">Destinasi</a></li>
+    <li><a href="galeri.html">Galeri</a></li>
+    <li><a href="panduan.html" class="active">Panduan</a></li>
+    <li><a href="kontak.html" class="nav-cta">Booking</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="eyebrow">Rencanakan Liburanmu</div>
+  <h1>Panduan Perjalanan Jogja</h1>
+  <p>Itinerary siap pakai, estimasi budget, dan tips penting sebelum berangkat ke Yogyakarta.</p>
+</div>
+
+<!-- ITINERARY -->
+<section>
+  <div class="section-eyebrow">Rencana Perjalanan</div>
+  <h2 class="section-title">Pilih Durasi Liburanmu</h2>
+  <p class="section-sub">Rekomendasi itinerary yang bisa kamu sesuaikan dengan waktu liburan.</p>
+
+  <div class="itin-tabs">
+    <button class="itin-tab-btn active" data-itin="1">1 Hari</button>
+    <button class="itin-tab-btn" data-itin="2">2 Hari</button>
+    <button class="itin-tab-btn" data-itin="3">3 Hari</button>
+  </div>
+
+  <div class="itin-panel active" id="itin-1">
+    <div class="itin-day">
+      <h3>Jogja Kilat</h3>
+      <ul>
+        <li><span class="itin-time">05.00</span> Sunrise di Candi Prambanan</li>
+        <li><span class="itin-time">10.00</span> Keraton Yogyakarta & Taman Sari</li>
+        <li><span class="itin-time">13.00</span> Makan siang gudeg di Wijilan</li>
+        <li><span class="itin-time">15.00</span> Belanja oleh-oleh di Malioboro</li>
+        <li><span class="itin-time">18.00</span> Sunset di angkringan Malioboro</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="itin-panel" id="itin-2">
+    <div class="itin-day">
+      <h3>Hari 1 — Budaya & Sejarah</h3>
+      <ul>
+        <li><span class="itin-time">08.00</span> Candi Prambanan</li>
+        <li><span class="itin-time">11.00</span> Keraton Yogyakarta</li>
+        <li><span class="itin-time">14.00</span> Taman Sari</li>
+        <li><span class="itin-time">19.00</span> Kuliner Malioboro</li>
+      </ul>
+    </div>
+    <div class="itin-day">
+      <h3>Hari 2 — Alam & Pantai</h3>
+      <ul>
+        <li><span class="itin-time">05.00</span> Sunrise Gunung Merapi (Jeep Tour)</li>
+        <li><span class="itin-time">12.00</span> Hutan Pinus Mangunan</li>
+        <li><span class="itin-time">16.00</span> Sunset Pantai Parangtritis</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="itin-panel" id="itin-3">
+    <div class="itin-day">
+      <h3>Hari 1 — Candi & Budaya</h3>
+      <ul>
+        <li><span class="itin-time">06.00</span> Sunrise Candi Prambanan</li>
+        <li><span class="itin-time">12.00</span> Candi Prambanan</li>
+        <li><span class="itin-time">19.00</span> Malioboro Street Food</li>
+      </ul>
+    </div>
+    <div class="itin-day">
+      <h3>Hari 2 — Alam Pegunungan</h3>
+      <ul>
+        <li><span class="itin-time">05.00</span> Jeep Tour Gunung Merapi</li>
+        <li><span class="itin-time">11.00</span> Hutan Pinus Mangunan</li>
+        <li><span class="itin-time">15.00</span> Kaliurang & sekitarnya</li>
+      </ul>
+    </div>
+    <div class="itin-day">
+      <h3>Hari 3 — Pantai Selatan</h3>
+      <ul>
+        <li><span class="itin-time">08.00</span> Pantai Indrayanti</li>
+        <li><span class="itin-time">12.00</span> Pantai Parangtritis</li>
+        <li><span class="itin-time">17.00</span> Belanja batik Pasar Beringharjo</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- KALKULATOR BUDGET -->
+<section style="background:var(--putih);">
+  <div class="section-eyebrow">Estimasi Biaya</div>
+  <h2 class="section-title">Kalkulator Budget Liburan</h2>
+  <p class="section-sub">Hitung perkiraan biaya perjalananmu ke Jogja secara instan.</p>
+
+  <div class="kalkulator">
+    <div class="kalk-grid">
+      <div class="kalk-row">
+        <label for="jumlahOrang">Jumlah Orang</label>
+        <input type="number" id="jumlahOrang" min="1" value="2" />
+      </div>
+      <div class="kalk-row">
+        <label for="jumlahHari">Jumlah Hari</label>
+        <input type="number" id="jumlahHari" min="1" value="3" />
+      </div>
+    </div>
+    <div class="kalk-row">
+      <label for="gayaLiburan">Gaya Liburan</label>
+      <select id="gayaLiburan">
+        <option value="150000">Hemat (Rp 150.000/orang/hari)</option>
+        <option value="350000" selected>Standar (Rp 350.000/orang/hari)</option>
+        <option value="700000">Nyaman (Rp 700.000/orang/hari)</option>
+      </select>
+    </div>
+    <button class="kalk-btn" onclick="hitungBudget()">Hitung Estimasi</button>
+
+    <div class="kalk-hasil" id="kalkHasil">
+      <div class="angka" id="kalkAngka">Rp 0</div>
+      <p>Estimasi total biaya perjalanan (akomodasi, makan, transportasi lokal, dan tiket masuk)</p>
+    </div>
+  </div>
+</section>
+
+<!-- PACKING LIST -->
+<section>
+  <div class="section-eyebrow">Persiapan</div>
+  <h2 class="section-title">Barang Bawaan Wajib</h2>
+  <p class="section-sub">Jangan sampai ketinggalan barang-barang penting ini.</p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Kategori</th><th>Barang</th><th>Prioritas</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Dokumen</td><td>KTP/Identitas, tiket, bukti booking</td><td>Wajib</td></tr>
+        <tr><td>Pakaian</td><td>Baju ringan, jaket tipis untuk malam</td><td>Wajib</td></tr>
+        <tr><td>Kesehatan</td><td>Obat pribadi, sunscreen, hand sanitizer</td><td>Wajib</td></tr>
+        <tr><td>Elektronik</td><td>Power bank, charger, kamera</td><td>Disarankan</td></tr>
+        <tr><td>Lainnya</td><td>Topi, kacamata hitam, tas kecil anti air</td><td>Opsional</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="background:var(--putih);">
+  <div class="section-eyebrow">Sering Ditanyakan</div>
+  <h2 class="section-title">Pertanyaan Umum</h2>
+  <p class="section-sub">Hal-hal yang sering ditanyakan sebelum berkunjung ke Yogyakarta.</p>
+
+  <div class="faq-wrap" id="faqWrap">
+    <div class="faq-item">
+      <div class="faq-question">Kapan waktu terbaik berkunjung ke Jogja? <span class="icon">+</span></div>
+      <div class="faq-answer"><p>Musim kemarau (April–Oktober) adalah waktu terbaik karena cuaca cerah dan cocok untuk aktivitas outdoor seperti sunrise di Borobudur atau jeep tour Merapi.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question">Bagaimana transportasi terbaik di Jogja? <span class="icon">+</span></div>
+      <div class="faq-answer"><p>Sewa motor adalah pilihan paling fleksibel dan terjangkau. Alternatif lain: ojek online, TransJogja, atau mobil sewa dengan sopir untuk rombongan besar.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question">Apakah perlu reservasi tiket candi terlebih dahulu? <span class="icon">+</span></div>
+      <div class="faq-answer"><p>Untuk Candi Prambanan, terutama saat musim liburan atau akhir pekan, sangat disarankan membeli tiket secara online lebih dulu agar tidak antre lama.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question">Apa oleh-oleh khas yang wajib dibeli? <span class="icon">+</span></div>
+      <div class="faq-answer"><p>Bakpia, batik, gudeg kaleng, dan kerajinan perak khas Kotagede adalah oleh-oleh favorit wisatawan dari Yogyakarta.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="index.html" class="footer-logo">Jogja<span>Trip</span></a>
+  <ul class="footer-links">
+    <li><a href="destinasi.html">Destinasi</a></li>
+    <li><a href="galeri.html">Galeri</a></li>
+    <li><a href="panduan.html">Panduan</a></li>
+    <li><a href="kontak.html">Kontak</a></li>
+  </ul>
+  <div style="font-size:0.82rem;">© 2026 JogjaTrip. All rights reserved.</div>
+</footer>
+
+<script>
+  // ===== JS #1: NAVBAR SCROLL & HAMBURGER =====
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+  });
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  // ===== JS #2: TAB ITINERARY =====
+  const itinBtns = document.querySelectorAll('.itin-tab-btn');
+  itinBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      itinBtns.forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.itin-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('itin-' + btn.dataset.itin).classList.add('active');
+    });
+  });
+
+  // ===== JS #3: KALKULATOR BUDGET =====
+  function hitungBudget() {
+    const orang = parseInt(document.getElementById('jumlahOrang').value) || 1;
+    const hari = parseInt(document.getElementById('jumlahHari').value) || 1;
+    const rate = parseInt(document.getElementById('gayaLiburan').value);
+    const total = orang * hari * rate;
+
+    const formatted = 'Rp ' + total.toLocaleString('id-ID');
+    document.getElementById('kalkAngka').textContent = formatted;
+    document.getElementById('kalkHasil').classList.add('show');
+  }
+
+  // ===== JS #4: FAQ ACCORDION =====
+  document.querySelectorAll('.faq-question').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.parentElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JogjaTrip — Panduan Wisata Interaktif Yogyakarta</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="index.html" class="logo">Jogja<span>Trip</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="destinasi.html">Destinasi</a></li>
+    <li><a href="galeri.html">Galeri</a></li>
+    <li><a href="panduan.html">Panduan</a></li>
+    <li><a href="kontak.html" class="nav-cta">Booking</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <span class="hero-badge">✨ Destinasi Terbaik 2026</span>
+    <h1>Jelajahi Keajaiban<br><em>Yogyakarta</em></h1>
+    <p>Temukan pesona budaya, alam, dan kuliner Jogja yang tak terlupakan. Dari Candi Borobudur hingga pantai selatan yang eksotis.</p>
+    <div class="hero-btns">
+      <a href="destinasi.html" class="btn-primary">Jelajahi Sekarang →</a>
+      <a href="panduan.html" class="btn-outline">Panduan Perjalanan</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num" id="counter-dest">0</div>
+        <div class="stat-label">Destinasi Wisata</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="counter-pengunjung">0</div>
+        <div class="stat-label">Pengunjung/Tahun</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="counter-rating">0</div>
+        <div class="stat-label">Rating Wisatawan</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COUNTDOWN — Festival Kesenian Yogyakarta -->
+<div class="countdown-section">
+  <p>🎭 Festival Kesenian Yogyakarta 2026 — Dimulai dalam</p>
+  <div class="countdown">
+    <div class="countdown-item">
+      <div class="countdown-num" id="cd-hari">00</div>
+      <div class="countdown-label">Hari</div>
+    </div>
+    <div class="countdown-sep">:</div>
+    <div class="countdown-item">
+      <div class="countdown-num" id="cd-jam">00</div>
+      <div class="countdown-label">Jam</div>
+    </div>
+    <div class="countdown-sep">:</div>
+    <div class="countdown-item">
+      <div class="countdown-num" id="cd-menit">00</div>
+      <div class="countdown-label">Menit</div>
+    </div>
+    <div class="countdown-sep">:</div>
+    <div class="countdown-item">
+      <div class="countdown-num" id="cd-detik">00</div>
+      <div class="countdown-label">Detik</div>
+    </div>
+  </div>
+</div>
+
+<!-- DESTINASI UNGGULAN -->
+<section>
+  <div class="section-eyebrow">Rekomendasi Kami</div>
+  <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1rem;">
+    <div>
+      <h2 class="section-title">Destinasi Unggulan</h2>
+      <p class="section-sub">Pilihan terbaik yang wajib kamu kunjungi saat pertama kali ke Jogja.</p>
+    </div>
+    <a href="destinasi.html" class="btn-outline" style="white-space:nowrap;">Lihat Semua →</a>
+  </div>
+
+  <div class="destinasi-grid">
+    <a href="destinasi.html" class="dest-card">
+      <img class="dest-img" src="pantai.jpg" alt="pantai Parangtritis" />
+      <div class="dest-body">
+        <span class="dest-tag">Alam</span>
+        <div class="dest-name">pantai Parangtritis</div>
+        <p class="dest-desc">Pantai Parangtritis adalah objek wisata dengan memperlihatkan hamparan pasir hitam serta lautan yang indah</p>
+        <div class="dest-meta">
+          <span class="dest-price">Rp 5.000</span>
+          <span class="dest-rating">★★★★★ 4.9</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="destinasi.html" class="dest-card">
+      <img class="dest-img" src="kraton.jpeg" alt="Keraton Yogyakarta" />
+      <div class="dest-body">
+        <span class="dest-tag">Sejarah</span>
+        <div class="dest-name">Keraton Yogyakarta</div>
+        <p class="dest-desc">Pusat kebudayaan Jawa yang masih aktif, tempat Sultan dan keluarga kerajaan bermukim.</p>
+        <div class="dest-meta">
+          <span class="dest-price">Rp 15.000</span>
+          <span class="dest-rating">★★★★★ 4.8</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="destinasi.html" class="dest-card">
+      <img class="dest-img" src="merapi.jpg" alt="Gunung Merapi" />
+      <div class="dest-body">
+        <span class="dest-tag">Alam</span>
+        <div class="dest-name">Gunung Merapi</div>
+        <p class="dest-desc">Gunung berapi aktif paling terkenal di Indonesia dengan panorama sunrise memukau.</p>
+        <div class="dest-meta">
+          <span class="dest-price">Rp 25.000</span>
+          <span class="dest-rating">★★★★☆ 4.7</span>
+        </div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- KENAPA JOGJA -->
+<section class="kenapa">
+  <div style="text-align:center; margin-bottom:0;">
+    <div class="section-eyebrow">Alasan Memilih Jogja</div>
+    <h2 class="section-title">Kenapa Harus ke Yogyakarta?</h2>
+    <p class="section-sub" style="margin:0 auto;">Bukan sekadar liburan, tapi pengalaman yang membekas seumur hidup.</p>
+  </div>
+  <div class="kenapa-grid">
+    <div class="kenapa-card">
+      <div class="kenapa-icon">🏛️</div>
+      <h3>Warisan Budaya</h3>
+      <p>Rumah bagi dua situs Warisan Dunia UNESCO: Borobudur & Prambanan yang berusia ribuan tahun.</p>
+    </div>
+    <div class="kenapa-card">
+      <div class="kenapa-icon">🍜</div>
+      <h3>Surga Kuliner</h3>
+      <p>Gudeg, bakpia, sate klathak, dan ratusan kuliner khas yang hanya bisa dinikmati di sini.</p>
+    </div>
+    <div class="kenapa-card">
+      <div class="kenapa-icon">🎨</div>
+      <h3>Kota Seni</h3>
+      <p>Pusat batik, wayang, gamelan, dan ribuan galeri seni yang hidup sepanjang tahun.</p>
+    </div>
+    <div class="kenapa-card">
+      <div class="kenapa-icon">💰</div>
+      <h3>Ramah di Kantong</h3>
+      <p>Destinasi wisata dengan biaya yang sangat terjangkau tanpa mengorbankan pengalaman.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO -->
+<section class="video-section">
+  <div class="section-eyebrow" style="color:var(--hijau-muda);">Lihat Sendiri</div>
+  <h2 class="section-title">Rasakan Pesona Jogja</h2>
+  <p class="section-sub">Saksikan keindahan Yogyakarta dari sudut pandang yang berbeda.</p>
+  <div class="video-wrapper">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/bka65YgaD0A?si=ohSXhn0OJbyAyZty" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="section-eyebrow" style="color:rgba(255,255,255,0.6);">Mulai Perjalananmu</div>
+  <h2 class="section-title">Siap Liburan ke Jogja?</h2>
+  <p>Hubungi kami sekarang dan dapatkan rekomendasi paket wisata terbaik yang sesuai budget kamu.</p>
+  <a href="kontak.html" class="btn-white">Booking Sekarang →</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="index.html" class="footer-logo">Jogja<span>Trip</span></a>
+  <ul class="footer-links">
+    <li><a href="destinasi.html">Destinasi</a></li>
+    <li><a href="galeri.html">Galeri</a></li>
+    <li><a href="panduan.html">Panduan</a></li>
+    <li><a href="kontak.html">Kontak</a></li>
+  </ul>
+  <div class="footer-copy">© 2026 JogjaTrip. All rights reserved.</div>
+</footer>
+
+<script>
+  // ===== JS #1: NAVBAR SCROLL =====
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  // ===== JS #2: HAMBURGER MENU =====
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('navLinks').classList.toggle('open');
+  });
+
+  // ===== JS #3: COUNTDOWN TIMER — FKY 2026 (1 Agustus 2026) =====
+  const targetDate = new Date('2026-08-01T09:00:00').getTime();
+
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+      document.querySelector('.countdown-section p').textContent = '🎭 Festival Kesenian Yogyakarta 2026 sedang berlangsung!';
+      return;
+    }
+
+    const hari   = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const jam    = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const menit  = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const detik  = Math.floor((diff % (1000 * 60)) / 1000);
+
+    document.getElementById('cd-hari').textContent  = String(hari).padStart(2, '0');
+    document.getElementById('cd-jam').textContent   = String(jam).padStart(2, '0');
+    document.getElementById('cd-menit').textContent = String(menit).padStart(2, '0');
+    document.getElementById('cd-detik').textContent = String(detik).padStart(2, '0');
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // ===== JS #4: ANIMASI COUNTER STATISTIK =====
+  function animateCounter(id, target, suffix = '', duration = 2000) {
+    const el = document.getElementById(id);
+    let start = 0;
+    const step = target / (duration / 16);
+
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= target) {
+        el.textContent = target + suffix;
+        clearInterval(timer);
+      } else {
+        el.textContent = Math.floor(start) + suffix;
+      }
+    }, 16);
+  }
+
+  // Jalankan counter saat hero terlihat
+  const heroObserver = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      animateCounter('counter-dest', 120, '+');
+      animateCounter('counter-pengunjung', 5, 'Jt+');
+      animateCounter('counter-rating', 4.9, '/5', 1500);
+      heroObserver.disconnect();
+    }
+  });
+  heroObserver.observe(document.querySelector('.hero-stats'));
+</script>
+
+</body>
+</html>
